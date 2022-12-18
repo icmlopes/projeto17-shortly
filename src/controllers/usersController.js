@@ -28,3 +28,14 @@ export async function postSignUp(req, res) {
     console.log(err);
   }
 }
+
+export async function postSignIn(req, res) {
+  const { email, passwordHashed } = req.body;
+
+  try{
+
+  } catch(err){
+    console.log(err)
+    res.sendStatus(500)
+  }
+}
