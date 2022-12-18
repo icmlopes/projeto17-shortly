@@ -11,7 +11,7 @@ export async function postSignUp(req, res) {
       [email]
     );
 
-    if (existingEmail.length > 0) {
+    if (existingEmail.rowCount > 0) {
       return res
         .status(409)
         .send("Esse e-mail já está cadastrado em nosso sistema.");
