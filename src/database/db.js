@@ -9,5 +9,3 @@ const connection = new Pool({
 });
 
 export default connection;
-
-
