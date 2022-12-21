@@ -79,3 +79,50 @@ export async function openShortUrl(req, res) {
     console.log(err);
   }
 }
+
+export async function deleteUrlById(req, res) {
+  const authorization = req.headers.authorization;
+  const token = authorization?.replace("Bearer ", "");
+  const id = req.params.id;
+
+  console.log("AAAAAAAAAAAAAA");
+  console.log(token);
+  console.log(id);
+
+  try {
+    if (!token) {
+      return res.sendStatus(401);
+    }
+
+    const tokenUserId = await connection.query(
+      `SELECT sessions.token, sessions."userId" FROM sessions WHERE token = $1`,
+      [token]
+    );
+
+    const verifyUserId = await connection.query(
+      `
+    SELECT id FROM users WHERE id = $1`,
+      [tokenUserId.rows[0].userId]
+    );
+
+    if (verifyUserId === false) {
+      return res.sendStatus(401);
+    }
+
+    const urlDb = await connection.query("SELECT * FROM urls WHERE id = $1", [
+      id,
+    ]);
+
+    if (!urlDb.rows[0]) {
+      return res.sendStatus(404);
+    }
+
+    const deleteUrl = await connection.query(
+      `DELETE FROM urls WHERE userid = $1`,
+      [tokenUserId.rows[0].userId]
+    );
+    res.sendStatus(204);
+  } catch (err) {
+    console.log(err);
+  }
+}
