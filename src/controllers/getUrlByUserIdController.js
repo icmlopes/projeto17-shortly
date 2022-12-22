@@ -4,13 +4,9 @@ export async function getUserUrls(req, res) {
   const authorization = req.headers.authorization;
   const token = authorization?.replace("Bearer ", "");
 
-  console.log("AAAAAAAAAAAAAA");
-  console.log(token);
-
   try {
     if (!token) {
-      return res.sendStatus(401); //falta fazer a parte do token inválido
-      //aqui só está validando quando não tem token
+      return res.sendStatus(401);
     }
 
     const getUserId = await connection.query(
@@ -23,13 +19,15 @@ export async function getUserUrls(req, res) {
       return res.sendStatus(401);
     }
 
-    console.log("token", "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", getUserId);
-
     const getUserInfo = await connection.query(
       `
       SELECT * FROM users WHERE id = $1`,
       [getUserId.rows[0].userId]
     );
+
+    if (getUserId.rows[0].userId !== getUserInfo.rows[0].id) {
+      return res.sendStatus(404);
+    }
 
     const getUserUrls = await connection.query(
       `SELECT * FROM urls WHERE "userId" = $1`,

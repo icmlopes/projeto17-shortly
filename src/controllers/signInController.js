@@ -21,8 +21,6 @@ export async function postSignIn(req, res) {
       'INSERT INTO sessions (token, "userId") VALUES  ($1, $2)',
       [token, getUser.rows[0].id]
     );
-    console.log("Deu bom");
-    console.log(token);
 
     res.send(token).status(200);
   } catch (err) {

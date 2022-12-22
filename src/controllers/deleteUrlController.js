@@ -15,19 +15,18 @@ export async function deleteUrlById(req, res) {
       [token]
     );
 
+    const findUser = await connection.query(
+      `SELECT users.id FROM users WHERE id = $1`,
+      [tokenUserId.rows[0].userId]
+    );
+
     if (tokenUserId.rowCount === 0) {
       return res.sendStatus(401);
     }
 
-    // const verifyUserId = await connection.query(
-    //   `
-    // SELECT id FROM users WHERE id = $1`,
-    //   [tokenUserId.rows[0].userId]
-    // );
-
-    // if (verifyUserId === false) {
-    //   return res.sendStatus(401);
-    // }
+    if (tokenUserId.rows[0].userId !== findUser.rows[0].id) {
+      return res.sendStatus(401);
+    }
 
     const urlDb = await connection.query("SELECT * FROM urls WHERE id = $1", [
       id,
