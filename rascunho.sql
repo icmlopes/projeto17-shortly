@@ -30,7 +30,7 @@ CREATE TABLE users(
     name TEXT NOT NULL,
     email TEXT NOT NULL,
     password TEXT NOT NULL,
-    createdAt TIMESTAMP NOT NULL DEFAULT NOW())
+    "createdAt" TIMESTAMP NOT NULL DEFAULT NOW())
 
 
 SELECT * FROM users;
@@ -50,10 +50,11 @@ DROP TABLE sessions;
 CREATE TABLE urls(
   id SERIAL PRIMARY KEY,
   url TEXT NOT NULL,
-  shortUrl TEXT NOT NULL UNIQUE,
+  "shortUrl" TEXT NOT NULL UNIQUE,
   clicks INT DEFAULT 0,
-  createdAt TIMESTAMP NOT NULL DEFAULT NOW(),
-  userId INTEGER NOT NULL REFERENCES users(id)
+  "createdAt" TIMESTAMP NOT NULL DEFAULT NOW(),
+  "userId" INTEGER NOT NULL REFERENCES users(id)
 )
 
 SELECT * FROM urls;
+
