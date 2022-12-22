@@ -1,11 +1,9 @@
 import { Router } from "express";
-import {
-  deleteUrlById,
-  getRanking,
-  getUrlById,
-  openShortUrl,
-  postUrl,
-} from "../controllers/urlsController.js";
+import { deleteUrlById } from "../controllers/deleteUrlController.js";
+import { getUrlById } from "../controllers/getUrlByIdController.js";
+import { postUrl } from "../controllers/postUrlController.js";
+import { openShortUrl } from "../controllers/redirectToShortUrlController.js";
+import { getRanking } from "../controllers/rankingController.js";
 import { urlsSchemaValidation } from "../middleware/urlsValidationMiddleware.js";
 
 const router = Router();
