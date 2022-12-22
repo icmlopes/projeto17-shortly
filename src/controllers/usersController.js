@@ -41,18 +41,18 @@ export async function postSignIn(req, res) {
 
     if (!bcrypt.compareSync(password, getUser.rows[0].password)) {
       return res.status(401).send("Senha incorreta");
-    } else {
-      const token = uuid();
-
-      await connection.query(
-        'INSERT INTO sessions (token, "userId") VALUES  ($1, $2)',
-        [token, getUser.rows[0].id]
-      );
-      console.log("Deu bom");
-      console.log(token);
     }
 
-    res.sendStatus(200);
+    const token = uuid();
+
+    await connection.query(
+      'INSERT INTO sessions (token, "userId") VALUES  ($1, $2)',
+      [token, getUser.rows[0].id]
+    );
+    console.log("Deu bom");
+    console.log(token);
+
+    res.send(token).status(200);
   } catch (err) {
     console.log(err);
     res.sendStatus(500);
@@ -68,7 +68,8 @@ export async function getUserUrls(req, res) {
 
   try {
     if (!token) {
-      return res.sendStatus(401);
+      return res.sendStatus(401); //falta fazer a parte do token inválido
+      //aqui só está validando quando não tem token
     }
 
     const getUserId = await connection.query(
@@ -76,6 +77,12 @@ export async function getUserUrls(req, res) {
     SELECT * FROM sessions WHERE token = $1`,
       [token]
     );
+
+    if (getUserId.rowCount === 0) {
+      return res.sendStatus(401);
+    }
+
+    console.log("token", "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", getUserId);
 
     const getUserInfo = await connection.query(
       `
